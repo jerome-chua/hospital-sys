@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { arrayParser } from 'pg-types';
 
 export default function initAppointmentsController(db) {
   const login = async (req, res) => {
@@ -29,13 +30,29 @@ export default function initAppointmentsController(db) {
     }
   }
 
+  const mapNames = (id, toMap) => {
+    const docPatient = Object.values(toMap)
+    for (let i=0; i<docPatient.length; i+=1) {
+      if (id === docPatient[i].dataValues.id) {
+        return docPatient[i].dataValues.name
+      }
+    }
+  }
+
   const allAppointments = async (req, res) => {
     try {
       const appointments = await db.Appointment.findAll();
-
-      appointments.forEach((i) => {
-        i.dataValues.startDatetime = moment(i.startDatetime).format('Do MMMM YYYY | hA')
+      const doctors = await db.Doctor.findAll();
+      const patients = await db.Patient.findAll();
+      
+      appointments.forEach((row) => {
+        row.dataValues.doctorId = mapNames(row.dataValues.doctorId, doctors);
+        row.dataValues.patientId = mapNames(row.dataValues.patientId, patients);
+        row.dataValues.startDatetime = moment(row.startDatetime).format('Do MMMM YYYY | hA')
+        row.dataValues.endDatetime = moment(row.endDatetime).format('Do MMMM YYYY | hA')
       })
+
+      // console.log("❤️SEE APP ========", appointments);
 
       res.render('all-appointments', { appointments })
     } catch (err) {

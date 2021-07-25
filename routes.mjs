@@ -7,4 +7,5 @@ export default function bindRoutes(app) {
 
   app.get('/login', AppointmentsController.login);
   app.post('/login', AppointmentsController.loginAuth)
+  app.get('/allappointments', AppointmentsController.allAppointments)
 }

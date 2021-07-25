@@ -1,4 +1,4 @@
-export default function initDoctorModel(sequlieze, DataTypes) {
+export default function initDoctorModel(sequelize, DataTypes) {
   return sequelize.define('doctor', {
     id: {
         allowNull: false,

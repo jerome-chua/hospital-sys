@@ -1,4 +1,4 @@
-export default function initAppointmentModel(sequlieze, DataTypes) {
+export default function initAppointmentModel(sequelize, DataTypes) {
   return sequelize.define('appointment', {
      id: {
         allowNull: false,

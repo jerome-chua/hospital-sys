@@ -1,4 +1,4 @@
-export default function initAppointmentModel(sequelize, DataTypes) {
+export default function initAdminModel(sequelize, DataTypes) {
   return sequelize.define('admin', {
     id: {
       allowNull: false,

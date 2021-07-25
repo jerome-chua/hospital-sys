@@ -30,7 +30,6 @@ const readCsvFn = async () => {
     }
 
     return csvData;
-    
   } catch (err) {
     console.log(err);
   }

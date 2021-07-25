@@ -1,5 +1,4 @@
 import moment from 'moment';
-import { arrayParser } from 'pg-types';
 
 export default function initAppointmentsController(db) {
   const login = async (req, res) => {
@@ -40,11 +39,17 @@ export default function initAppointmentsController(db) {
   }
 
   const allAppointments = async (req, res) => {
+    const { doctorId } = req.query;
+
     try {
-      const appointments = await db.Appointment.findAll();
+      let appointments = await db.Appointment.findAll();
       const doctors = await db.Doctor.findAll();
       const patients = await db.Patient.findAll();
-      
+
+      if (isNaN(Number(doctorId)) == false) {
+        appointments = appointments.filter(app => app.doctorId === Number(doctorId));
+      }
+
       appointments.forEach((row) => {
         row.dataValues.doctorId = mapNames(row.dataValues.doctorId, doctors);
         row.dataValues.patientId = mapNames(row.dataValues.patientId, patients);
@@ -52,7 +57,10 @@ export default function initAppointmentsController(db) {
         row.dataValues.endDatetime = moment(row.endDatetime).format('Do MMMM YYYY | hA')
       })
 
+
+      
       res.render('all-appointments', { appointments, doctors })
+
     } catch (err) {
       console.log(err);
     }

@@ -11,15 +11,16 @@
   <body>
     <!-- Start of Sighting Page-->
     <div class="container mt-5">
+      <h1>All Appointments</h1>
       <!-- Start of Sort By FORM -->
-      <form method="GET" action="/appointments/:doctorId">
+      <form method="GET" action="/allappointments/?action=doctorId">
         <div class="row">
           <div class="col">
             <h5>Choose Doctor:</h5>
-            <select name="order">
+            <select name="doctorId">
               <option>All</option>
               <% doctors.forEach((doc) => { %>
-              <option><%= doc.name %></option>
+              <option value="<%= doc.id %>"><%= doc.name %></option>
               <% }) %>
             </select>
 
@@ -27,7 +28,7 @@
             <button
               type="submit"
               id="submit-btn"
-              class="btn btn-info btn-md btn-block mt-1 mb-4"
+              class="btn btn-info btn-md btn-block my-3"
               data-toggle="button"
             >
               Submit
@@ -41,7 +42,7 @@
       <!-- Start of Appointment List-->
       <div class="container">
         <div class="row">
-          <h1 class="pb-1">Appointments List</h1>
+          <h3 class="pb-1">Appointments List</h3>
         </div>
         <div class="table-responsive-md">
           <table class="table">

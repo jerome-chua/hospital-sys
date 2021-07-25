@@ -52,9 +52,7 @@ export default function initAppointmentsController(db) {
         row.dataValues.endDatetime = moment(row.endDatetime).format('Do MMMM YYYY | hA')
       })
 
-      // console.log("❤️SEE APP ========", appointments);
-
-      res.render('all-appointments', { appointments })
+      res.render('all-appointments', { appointments, doctors })
     } catch (err) {
       console.log(err);
     }

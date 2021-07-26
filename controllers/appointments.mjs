@@ -57,10 +57,23 @@ export default function initAppointmentsController(db) {
         row.dataValues.endDatetime = moment(row.endDatetime).format('Do MMMM YYYY | hA')
       })
 
-
-      
       res.render('all-appointments', { appointments, doctors })
 
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  const removeAppointment = async (req, res) => {
+    const { appId } = req.params;
+    try {
+      const toDelete = await db.Appointment.destroy({
+        where: {
+          id: appId,
+        },
+      });      
+
+      res.redirect('/allappointments')
     } catch (err) {
       console.log(err);
     }
@@ -70,5 +83,6 @@ export default function initAppointmentsController(db) {
     login,
     loginAuth,
     allAppointments,
+    removeAppointment,
   }
 }

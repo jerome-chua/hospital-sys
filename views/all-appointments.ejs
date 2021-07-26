@@ -65,7 +65,10 @@
               <td class="align-middle"><%= appointment.patientId %></td>
               <td class="align-middle">
                 <!-- Delete button (for each appointment) -->
-                <form method="POST" action="/<%=index%>?_method=DELETE">
+                <form
+                  method="POST"
+                  action="/removeapp/<%=appointment.id%>?_method=DELETE"
+                >
                   <button type="submit" class="btn btn-outline-danger">
                     Delete
                   </button>

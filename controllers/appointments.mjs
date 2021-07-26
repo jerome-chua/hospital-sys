@@ -97,6 +97,9 @@ export default function initAppointmentsController(db) {
           id: Number(appId),
         }
       });
+      
+      appointment.startDatetime =  new Date(appointment.startDatetime)
+   
 
       const doctors = await db.Doctor.findAll({
         where: {
@@ -126,7 +129,7 @@ export default function initAppointmentsController(db) {
         }
       })
 
-      res.render('update-appointment', { selectedDoctor, selectedPatient, doctors, patients });
+      res.render('update-appointment', { appointment, selectedDoctor, selectedPatient, doctors, patients });
     } catch (err) {
       console.log(err);
     }

@@ -13,33 +13,47 @@
       <div class="row">
         <div class="col">
           <h1 class="mb-4">Update Appointment Details</h1>
-          <h5>Doctor:</h5>
-          <select name="doctor" id="doctor">
-            <option value="<%= selectedDoctor.id %>" selected>
-              <%= selectedDoctor.name %>
-            </option>
-            <% doctors.forEach((doc) => { %>
-            <option value="<%=doc.id%>"><%= doc.name %></option>
-            <% }) %>
-          </select>
-          <h5 class="mt-4">Patient:</h5>
-          <select name="patient" id="patient">
-            <option value="<%= selectedPatient.id %>" selected>
-              <%= selectedPatient.name %>
-            </option>
-            <% patients.forEach((patient) => { %>
-            <option value="<%=patient.id%>"><%= patient.name %></option>
-            <% }) %>
-          </select>
-
-          <button
-            type="submit"
-            id="submit-btn"
-            class="btn btn-info btn-md btn-block my-4"
-            data-toggle="button"
+          <form
+            method="POST"
+            action="/updateappointment/<%=appointment.id%>?_method=PUT"
           >
-            Submit
-          </button>
+            <h5>Doctor:</h5>
+            <select name="doctor" id="doctor">
+              <option value="<%= selectedDoctor.id %>" selected>
+                <%= selectedDoctor.name %>
+              </option>
+              <% doctors.forEach((doc) => { %>
+              <option value="<%=doc.id%>"><%= doc.name %></option>
+              <% }) %>
+            </select>
+            <h5 class="mt-4">Patient:</h5>
+            <select name="patient" id="patient">
+              <option value="<%= selectedPatient.id %>" selected>
+                <%= selectedPatient.name %>
+              </option>
+              <% patients.forEach((patient) => { %>
+              <option value="<%=patient.id%>"><%= patient.name %></option>
+              <% }) %>
+            </select>
+            <br />
+            <label class="mt-4" for="meeting-time"><h5>Date & Time:</h5></label>
+            <br />
+            <input
+              type="datetime-local"
+              id="app-time"
+              name="app-time"
+              value="<%= appointment.startDatetime.toISOString().substring(0, 16) %>"
+            />
+
+            <button
+              type="submit"
+              id="submit-btn"
+              class="btn btn-info btn-md btn-block my-4"
+              data-toggle="button"
+            >
+              Submit
+            </button>
+          </form>
         </div>
       </div>
     </div>

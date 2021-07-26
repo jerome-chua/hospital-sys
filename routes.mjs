@@ -14,6 +14,7 @@ export default function bindRoutes(app) {
   app.delete('/removeapp/:appId', AppointmentsController.removeAppointment);
   // Update appointments (Edit)
   app.get('/updateappointment/:appId', AppointmentsController.updateAppointment)
+  app.put('/updateappointment', AppointmentsController.editAppointment)
   // Post appointments (Fix)
   app.get('/fixappointment', AppointmentsController.fixAppointmentFill)
   app.post('/fixappointment', AppointmentsController.fixAppointmentSave)

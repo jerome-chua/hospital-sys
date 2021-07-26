@@ -195,12 +195,21 @@ export default function initAppointmentsController(db) {
     }
   }
 
+  const editAppointment = async (req, res) => {
+    try {
+      console.log("Test")
+    } catch (err) {
+      console.log(err);
+    }
+  } 
+
   return {
     login,
     loginAuth,
     allAppointments,
     removeAppointment,
     updateAppointment,
+    editAppointment,
     fixAppointmentFill,
     fixAppointmentSave,
   }

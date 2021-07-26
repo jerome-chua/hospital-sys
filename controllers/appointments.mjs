@@ -90,7 +90,11 @@ export default function initAppointmentsController(db) {
   
   const fixAppointment = async (req, res) => {
     try {
-      res.render('fix-appointment');
+      const appointments = await db.Appointment.findAll();
+      const doctors = await db.Doctor.findAll();
+      const patients = await db.Patient.findAll();
+
+      res.render('fix-appointment', { doctors, patients });
     } catch (err) {
       console.log(err);
     }

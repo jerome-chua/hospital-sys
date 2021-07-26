@@ -39,15 +39,21 @@ export default function initAppointmentsController(db) {
   }
 
   const allAppointments = async (req, res) => {
-    const { doctorId } = req.query;
-
+    const { doctorId, appDate } = req.query;
+    const momentDate = moment(appDate);
     try {
       let appointments = await db.Appointment.findAll();
       const doctors = await db.Doctor.findAll();
       const patients = await db.Patient.findAll();
 
+      // If doctorId is a number, then filter for that doctor's Id
       if (isNaN(Number(doctorId)) == false) {
         appointments = appointments.filter(app => app.doctorId === Number(doctorId));
+      }
+
+      // If there is a query for date, filter accordingly
+      if (appDate) {
+        appointments = appointments.filter(app => moment(app.startDatetime).startOf('day').isSame(momentDate.startOf('day')))
       }
 
       appointments.forEach((row) => {

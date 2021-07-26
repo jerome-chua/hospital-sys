@@ -95,19 +95,23 @@ export default function initAppointmentsController(db) {
         }
       });
 
-      const doctor = await db.Doctor.findOne({
+      const doctors = await db.Doctor.findAll();
+
+      const selectedDoctor = await db.Doctor.findOne({
         where: {
           id: appointment.dataValues.doctorId
         }
       })
 
-      const patient = await db.Patient.findOne({
+      const patients = await db.Patient.findAll()
+
+      const selectedPatient = await db.Patient.findOne({
         where: {
           id: appointment.dataValues.patientId
         }
       })
 
-      res.render('edit-appointment', { doctor, patient });
+      res.render('update-appointment', { selectedDoctor, selectedPatient, doctors, patients });
     } catch (err) {
       console.log(err);
     }

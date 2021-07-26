@@ -1,4 +1,7 @@
 import moment from 'moment';
+import pkg from 'sequelize';
+
+const { Op } = pkg;
 
 export default function initAppointmentsController(db) {
   const login = async (req, res) => {
@@ -95,15 +98,27 @@ export default function initAppointmentsController(db) {
         }
       });
 
-      const doctors = await db.Doctor.findAll();
+      const doctors = await db.Doctor.findAll({
+        where: {
+          id : {
+            [Op.notIn]: [appointment.dataValues.doctorId],
+          }
+        }
+      });
+
+      const patients = await db.Patient.findAll({
+        where: {
+          id : {
+            [Op.notIn]: [appointment.dataValues.patientId],
+          }
+        }
+      });
 
       const selectedDoctor = await db.Doctor.findOne({
         where: {
           id: appointment.dataValues.doctorId
         }
-      })
-
-      const patients = await db.Patient.findAll()
+      });
 
       const selectedPatient = await db.Patient.findOne({
         where: {

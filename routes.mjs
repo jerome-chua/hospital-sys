@@ -15,5 +15,6 @@ export default function bindRoutes(app) {
   // Update appointments (Edit)
   app.get('/appointment/:appId/edit', AppointmentsController.editAppointment)
   // Post appointments (Fix)
-  app.get('/fixappointment', AppointmentsController.fixAppointment)
+  app.get('/fixappointment', AppointmentsController.fixAppointmentFill)
+  app.post('/fixappointment', AppointmentsController.fixAppointmentSave)
 }

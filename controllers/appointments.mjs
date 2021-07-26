@@ -94,9 +94,9 @@ export default function initAppointmentsController(db) {
     }
   }
   
-  const fixAppointment = async (req, res) => {
+  const fixAppointmentFill = async (req, res) => {
     try {
-      const appointments = await db.Appointment.findAll();
+      // const appointments = await db.Appointment.findAll();
       const doctors = await db.Doctor.findAll();
       const patients = await db.Patient.findAll();
 
@@ -106,6 +106,20 @@ export default function initAppointmentsController(db) {
     }
   }
 
+    
+  const fixAppointmentSave = async (req, res) => {
+    try {
+      const appointments = await db.Appointment.findAll();
+      const doctors = await db.Doctor.findAll();
+      const patients = await db.Patient.findAll();
+
+      res.redirect('success-page');
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+
 
   return {
     login,
@@ -113,6 +127,7 @@ export default function initAppointmentsController(db) {
     allAppointments,
     removeAppointment,
     editAppointment,
-    fixAppointment,
+    fixAppointmentFill,
+    fixAppointmentSave,
   }
 }

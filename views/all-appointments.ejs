@@ -53,6 +53,7 @@
               <th>Doctor</th>
               <th>Patient</th>
               <th></th>
+              <th></th>
             </tr>
 
             <!-- Display each appointment -->
@@ -63,6 +64,17 @@
               <td class="align-middle">60 min</td>
               <td class="align-middle"><%= appointment.doctorId %></td>
               <td class="align-middle"><%= appointment.patientId %></td>
+              <td class="align-middle">
+                <!-- Edit button (for each appointment) -->
+                <form
+                  method="GET"
+                  action="/appointment/<%=appointment.id%>/edit"
+                >
+                  <button type="submit" class="btn btn-outline-secondary">
+                    Edit
+                  </button>
+                </form>
+              </td>
               <td class="align-middle">
                 <!-- Delete button (for each appointment) -->
                 <form

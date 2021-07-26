@@ -79,10 +79,30 @@ export default function initAppointmentsController(db) {
     }
   }
 
+  const editAppointment = async (req, res) => {
+    const { appId } = req.params;
+    try {
+      res.render('edit-appointment');
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  
+  const fixAppointment = async (req, res) => {
+    try {
+      res.render('fix-appointment');
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+
   return {
     login,
     loginAuth,
     allAppointments,
     removeAppointment,
+    editAppointment,
+    fixAppointment,
   }
 }

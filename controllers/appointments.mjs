@@ -97,8 +97,8 @@ export default function initAppointmentsController(db) {
           id: Number(appId),
         }
       });
-      
-      appointment.startDatetime =  new Date(appointment.startDatetime)
+
+      appointment.startDatetime =  new Date(appointment.startDatetime + "Z")
    
 
       const doctors = await db.Doctor.findAll({

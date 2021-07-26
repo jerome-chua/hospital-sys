@@ -152,17 +152,30 @@ export default function initAppointmentsController(db) {
   const fixAppointmentSave = async (req, res) => {
     const { doctorId, patientId, appTime } = req.body;
     const appStart = new Date(appTime);
-    const appStartHr = moment(appStart).format('hh:mm:ss a')
     const appEnd = moment(appStart).add(60, 'm').toDate();
 
+    const extractAppDate = moment(appStart).format("YYYY-MM-DD");
     // To ensure that appointments are between 8am - 4pm
-    const appStartMoment = moment(appStartHr, 'HH:mm:ss');
-    const doctorStart = moment('07:59:59', 'HH:mm:ss');
-    const doctorEnd = moment('15:00:01', 'HH:mm:ss');
+    const FORMAT = 'HH:mm:ss';
+    const appStartMoment = moment(appStart);
+    const doctorStart = moment(`${extractAppDate}T07:59:59`);
+    const doctorEnd = moment(`${extractAppDate}T15:01:00`);
     
     try {
+      const appointments = await db.Appointment.findAll({
+        where: {
+          doctorId: Number(doctorId),
+        }
+      });
+
+      const allStartTimes = appointments.map(app => app.startDatetime);
+
       // Create appointment only if appTime is available
-      if (appStartMoment.isBetween(doctorStart, doctorEnd)) {
+      const withinHours = appStartMoment.isBetween(doctorStart, doctorEnd);
+
+      // WIP: to check through allStartTimes
+      const notClashing = true;
+      if (withinHours && notClashing) {
         const create = await db.Appointment.create({
                 doctorId: Number(doctorId),
                 patientId: Number(patientId),

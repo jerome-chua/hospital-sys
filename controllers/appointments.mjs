@@ -85,16 +85,36 @@ export default function initAppointmentsController(db) {
     }
   }
 
-  const editAppointment = async (req, res) => {
+  const updateAppointment = async (req, res) => {
     const { appId } = req.params;
+
     try {
-      res.render('edit-appointment');
+      const appointment = await db.Appointment.findOne({
+        where: {
+          id: Number(appId),
+        }
+      });
+
+      const doctor = await db.Doctor.findOne({
+        where: {
+          id: appointment.dataValues.doctorId
+        }
+      })
+
+      const patient = await db.Patient.findOne({
+        where: {
+          id: appointment.dataValues.patientId
+        }
+      })
+
+      res.render('edit-appointment', { doctor, patient });
     } catch (err) {
       console.log(err);
     }
   }
   
   const fixAppointmentFill = async (req, res) => {
+    const { appId } = req.body;
     try {
       // const appointments = await db.Appointment.findAll();
       const doctors = await db.Doctor.findAll();
@@ -113,20 +133,18 @@ export default function initAppointmentsController(db) {
       const doctors = await db.Doctor.findAll();
       const patients = await db.Patient.findAll();
 
-      res.redirect('success-page');
+      res.render('success-page');
     } catch (err) {
       console.log(err);
     }
   }
-
-
 
   return {
     login,
     loginAuth,
     allAppointments,
     removeAppointment,
-    editAppointment,
+    updateAppointment,
     fixAppointmentFill,
     fixAppointmentSave,
   }

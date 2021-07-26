@@ -12,37 +12,39 @@
       <div class="row">
         <div class="col">
           <h1 class="mb-5">Fix Appointment</h1>
-          <h5>Select Doctor:</h5>
-          <select name="doctor" id="doctor">
-            <% doctors.forEach((doc) => { %>
-            <option value="<%=doc.id%>"><%= doc.name %></option>
-            <% }) %>
-          </select>
-          <h5 class="mt-4">Select Patient:</h5>
-          <select name="patient" id="patient">
-            <% patients.forEach((patient) => { %>
-            <option value="<%=patient.id%>"><%= patient.name %></option>
-            <% }) %>
-          </select>
-          <br />
-          <label class="mt-4" for="meeting-time"
-            ><h5>Choose a time for the appointment:</h5></label
-          >
-          <br />
-          <input
-            type="datetime-local"
-            id="app-time"
-            name="app-time"
-            value="2018-06-12T08:00"
-          />
-          <button
-            type="submit"
-            id="submit-btn"
-            class="btn btn-info btn-md btn-block my-4"
-            data-toggle="button"
-          >
-            Submit
-          </button>
+          <form method="POST" action="/fixappointment">
+            <h5>Select Doctor:</h5>
+            <select name="doctorId" id="doctorId">
+              <% doctors.forEach((doc) => { %>
+              <option value="<%=doc.id%>"><%= doc.name %></option>
+              <% }) %>
+            </select>
+            <h5 class="mt-4">Select Patient:</h5>
+            <select name="patientId" id="patientId">
+              <% patients.forEach((patient) => { %>
+              <option value="<%=patient.id%>"><%= patient.name %></option>
+              <% }) %>
+            </select>
+            <br />
+            <label class="mt-4" for="appTime"
+              ><h5>Choose a time for the appointment:</h5></label
+            >
+            <br />
+            <input
+              type="datetime-local"
+              id="appTime"
+              name="appTime"
+              value="2018-06-12T08:00"
+            />
+            <button
+              type="submit"
+              id="submit-btn"
+              class="btn btn-success btn-md btn-block my-4"
+              data-toggle="button"
+            >
+              Confirm New Appointment
+            </button>
+          </form>
         </div>
       </div>
     </div>

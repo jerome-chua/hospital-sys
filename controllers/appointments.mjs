@@ -150,10 +150,16 @@ export default function initAppointmentsController(db) {
 
     
   const fixAppointmentSave = async (req, res) => {
+    const { doctorId, patientId, appTime } = req.body;
+    
     try {
-      const appointments = await db.Appointment.findAll();
-      const doctors = await db.Doctor.findAll();
-      const patients = await db.Patient.findAll();
+      const create = await db.Appointment.create({
+        doctorId: Number(doctorId),
+        patientId: Number(patientId),
+        startDatetime: new Date(appTime),
+      })
+
+      console.log("CREAT----", create);
 
       res.render('success-page');
     } catch (err) {

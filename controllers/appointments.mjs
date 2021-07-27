@@ -107,8 +107,7 @@ export default function initAppointmentsController(db) {
       });
 
       appointment.startDatetime =  new Date(appointment.startDatetime + "Z")
-   
-
+  
       const doctors = await db.Doctor.findAll({
         where: {
           id : {
@@ -142,6 +141,15 @@ export default function initAppointmentsController(db) {
       console.log(err);
     }
   }
+
+  const editAppointment = async (req, res) => {
+    const { appId } = req.params;
+    try {
+      console.log("Test")
+    } catch (err) {
+      console.log(err);
+    }
+  } 
   
   const fixAppointmentFill = async (req, res) => {
     const { appId } = req.body;
@@ -219,13 +227,6 @@ export default function initAppointmentsController(db) {
     }
   }
 
-  const editAppointment = async (req, res) => {
-    try {
-      console.log("Test")
-    } catch (err) {
-      console.log(err);
-    }
-  } 
 
   return {
     login,

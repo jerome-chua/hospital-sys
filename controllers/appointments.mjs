@@ -146,6 +146,17 @@ export default function initAppointmentsController(db) {
     const { appId } = req.params;
     const { doctorId, patientId, appTime } = req.body;
 
+    // Find end of appointment time
+    const appStart = new Date(appTime);
+    const appEnd = moment(appStart).add(60, 'm').toDate();
+
+    const extractAppDate = moment(appStart).format("YYYY-MM-DD");
+    // To ensure that appointments are between 8am - 4pm
+    const appStartMoment = moment(appStart);
+    const appEndMoment = moment(appEnd);
+    const doctorStart = moment(`${extractAppDate}T07:59:59`);
+    const doctorEnd = moment(`${extractAppDate}T15:01:00`);
+
     try {
       const appointment = await db.Appointment.findOne({
         where: {
@@ -153,13 +164,52 @@ export default function initAppointmentsController(db) {
         }
       });
 
+      // Replace doctor/patient details if change
       appointment.doctorId = Number(doctorId);
       appointment.patientId = Number(patientId);
-      appointment.startDatetime = appTime;
 
-      await appointment.save();
+      // Check all appointments related to requested doctor
+      const appointments = await db.Appointment.findAll({
+        where: {
+          doctorId: Number(doctorId),
+        }
+      });
 
-      res.render('success-page');
+      // Condition 1: Within 8am - 4pm 
+      const withinHours = appStartMoment.isBetween(doctorStart, doctorEnd);
+      
+      // Make an array of arrays - set up for syntax of moment.overlaps()
+      const allStartTimes = appointments.map(app => app.startDatetime);
+      const allEndTimes = appointments.map(app => app.endDatetime);
+      const existingRanges = ownArray(allStartTimes);
+      existingRanges.forEach((timeArr, idx) => {
+        timeArr.push(allEndTimes[idx])
+      })
+      
+      // Condition 2: No clashing of doctor's appointments within same day
+      const requestedRange = moment.range(appStartMoment, appEndMoment);
+      const notClashing = (timeRange) => {
+        // Compare all timings within existing ranges of doc's schedule with requested range
+        for (let i=0; i < existingRanges.length; i+=1) {
+          const existingRange = moment.range(existingRanges[i][0], existingRanges[i][1])
+          if (timeRange.overlaps(existingRange)) {
+            return false;
+          }
+        }
+        return true;
+      };
+
+      // If within hours & no clash, save updated appointment
+      if (withinHours && notClashing(requestedRange)) {
+        appointment.startDatetime = appTime;
+        appointment.endDatetime = appEnd;
+        await appointment.save();
+
+        res.render('success-page');
+      } else {
+        console.log("Failed")
+      }
+
 
     } catch (err) {
       console.log(err);
@@ -230,7 +280,6 @@ export default function initAppointmentsController(db) {
                 endDatetime: appEnd,
               })
             
-        console.log(create);
         res.render('success-page');
       } else {
         console.log("Failed")

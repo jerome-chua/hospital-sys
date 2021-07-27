@@ -144,8 +144,23 @@ export default function initAppointmentsController(db) {
 
   const editAppointment = async (req, res) => {
     const { appId } = req.params;
+    const { doctorId, patientId, appTime } = req.body;
+
     try {
-      console.log("Test")
+      const appointment = await db.Appointment.findOne({
+        where: {
+          id: Number(appId),
+        }
+      });
+
+      appointment.doctorId = Number(doctorId);
+      appointment.patientId = Number(patientId);
+      appointment.startDatetime = appTime;
+
+      await appointment.save();
+
+      res.render('success-page');
+
     } catch (err) {
       console.log(err);
     }

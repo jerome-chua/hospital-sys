@@ -175,26 +175,31 @@ export default function initAppointmentsController(db) {
         }
       });
 
-      // Make an array of arrays - syntax of moment.overlaps()
-      let allStartTimes = appointments.map(app => app.startDatetime);
-      // allStartTimes.forEach((i) => {
-        //   existingRanges.push(ownArray(i));
-        // })
-      const existingRanges = ownArray(allStartTimes);
-
-      console.log("existingRanges", existingRanges)
-
-      // Create appointment only if appTime is available
+      // Condition 1: Within 8am - 4pm 
       const withinHours = appStartMoment.isBetween(doctorStart, doctorEnd);
-      const requestedRange = [appStartMoment, appEndMoment];
-      // const notClashing = () => {
-      //   for (let i=0; i< existingRanges.length; i+=1) {
+      
+      // Make an array of arrays - set up for syntax of moment.overlaps()
+      const allStartTimes = appointments.map(app => app.startDatetime);
+      const allEndTimes = appointments.map(app => app.endDatetime);
+      const existingRanges = ownArray(allStartTimes);
+      existingRanges.forEach((timeArr, idx) => {
+        timeArr.push(allEndTimes[idx])
+      })
+      
+      // Condition 2: No clashing of doctor's appointments within same day
+      const requestedRange = moment.range(appStartMoment, appEndMoment);
+      const notClashing = (timeRange) => {
+        // Compare all timings within existing ranges of doc's schedule with requested range
+        for (let i=0; i < existingRanges.length; i+=1) {
+          const existingRange = moment.range(existingRanges[i][0], existingRanges[i][1])
+          if (timeRange.overlaps(existingRange)) {
+            return false;
+          }
+        }
+        return true;
+      };
 
-      //   }
-      // };
-      const notClashing = true;
-
-      if (withinHours && notClashing) {
+      if (withinHours && notClashing(requestedRange)) {
         const create = await db.Appointment.create({
                 doctorId: Number(doctorId),
                 patientId: Number(patientId),

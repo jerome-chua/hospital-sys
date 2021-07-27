@@ -1,7 +1,15 @@
-import moment from 'moment';
+import Moment from 'moment';
+import MomentRange from 'moment-range';
+const moment = MomentRange.extendMoment(Moment);
+
 import pkg from 'sequelize';
 
 const { Op } = pkg;
+
+// Create an array of arrays from an array
+const ownArray = (arr) => {
+  return arr.length ? [[arr[0]]].concat(ownArray(arr.slice(1))) : [];
+}
 
 export default function initAppointmentsController(db) {
   const login = async (req, res) => {
@@ -147,7 +155,6 @@ export default function initAppointmentsController(db) {
       console.log(err);
     }
   }
-
     
   const fixAppointmentSave = async (req, res) => {
     const { doctorId, patientId, appTime } = req.body;
@@ -156,8 +163,8 @@ export default function initAppointmentsController(db) {
 
     const extractAppDate = moment(appStart).format("YYYY-MM-DD");
     // To ensure that appointments are between 8am - 4pm
-    const FORMAT = 'HH:mm:ss';
     const appStartMoment = moment(appStart);
+    const appEndMoment = moment(appEnd);
     const doctorStart = moment(`${extractAppDate}T07:59:59`);
     const doctorEnd = moment(`${extractAppDate}T15:01:00`);
     
@@ -168,13 +175,25 @@ export default function initAppointmentsController(db) {
         }
       });
 
-      const allStartTimes = appointments.map(app => app.startDatetime);
+      // Make an array of arrays - syntax of moment.overlaps()
+      let allStartTimes = appointments.map(app => app.startDatetime);
+      // allStartTimes.forEach((i) => {
+        //   existingRanges.push(ownArray(i));
+        // })
+      const existingRanges = ownArray(allStartTimes);
+
+      console.log("existingRanges", existingRanges)
 
       // Create appointment only if appTime is available
       const withinHours = appStartMoment.isBetween(doctorStart, doctorEnd);
+      const requestedRange = [appStartMoment, appEndMoment];
+      // const notClashing = () => {
+      //   for (let i=0; i< existingRanges.length; i+=1) {
 
-      // WIP: to check through allStartTimes
+      //   }
+      // };
       const notClashing = true;
+
       if (withinHours && notClashing) {
         const create = await db.Appointment.create({
                 doctorId: Number(doctorId),
